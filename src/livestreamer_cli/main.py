@@ -404,8 +404,6 @@ def fetch_streams_infinite(plugin, interval):
         console.logger.info("Waiting for streams, retrying every {0} "
                             "second(s)", args.retry_streams)
     while not streams:
-        sleep(args.retry_streams)
-
         try:
             streams = fetch_streams(plugin)
         except PluginError as err:
@@ -471,6 +469,12 @@ def handle_url():
         plugin = livestreamer.resolve_url(args.url)
         console.logger.info("Found matching plugin {0} for URL {1}",
                             plugin.module, args.url)
+
+        
+        if args.delay_start > 0:
+            console.logger.debug("Sleeping for {0} seconds before starting stream",
+                                args.delay_start)
+            sleep(args.delay_start) 
 
         if args.retry_streams:
             streams = fetch_streams_infinite(plugin, args.retry_streams)
@@ -752,6 +756,9 @@ def setup_options():
 
     if args.stream_timeout:
         livestreamer.set_option("stream-timeout", args.stream_timeout)
+
+    if args.delay_start:
+        livestreamer.set_option("delay-start", args.delay_start)
 
     livestreamer.set_option("subprocess-errorlog", args.subprocess_errorlog)
 

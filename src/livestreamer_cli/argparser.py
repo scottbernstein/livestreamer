@@ -271,6 +271,14 @@ general.add_argument(
     action="store_true",
     help=argparse.SUPPRESS
 )
+general.add_argument(
+    "--delay-start",
+    type=num(int, min=0),
+    default=0,
+    help="""
+    Delay requesting of stream for the specified number of seconds
+    """
+)
 
 player = parser.add_argument_group("Player options")
 player.add_argument(
